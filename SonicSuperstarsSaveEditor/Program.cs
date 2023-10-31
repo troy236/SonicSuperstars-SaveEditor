@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace SonicSuperstarsSaveEditor;
 
@@ -21,43 +16,27 @@ internal class Program {
     }
 
     static void Start() {
-        Console.WriteLine("Sonic Superstars Save Editor - Version 1.0.0");
+        Console.WriteLine("Sonic Superstars Save Editor - Version 1.0.1");
         Console.WriteLine("Always backup your save data before modifying it");
         Console.WriteLine();
         try {
-            Console.Title = "Sonic Superstars Save Editor 1.0.0";
+            Console.Title = "Sonic Superstars Save Editor 1.0.1";
         }
         catch { }
         string saveFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "Sega", "SonicSuperstars", "Steam", "76561198383833971", "SonicSuperstarsStoryData.bin");
         if (!File.Exists(saveFile)) {
             Console.WriteLine("Input path to save data. The filename should be either SonicSuperstarsStoryData or OrionStoryData depending on PC or Console");
-            while (true) {
-                Console.Write("Enter path (Leave empty to exit): ");
-                saveFile = Console.ReadLine();
-                if (string.IsNullOrEmpty(saveFile)) return;
-                if (!File.Exists(saveFile)) {
-                    Console.WriteLine("File does not exist");
-                    continue;
-                }
-                break;
-            }
+            saveFile = AskForSavePath();
+            if (string.IsNullOrEmpty(saveFile)) return;
         }
         else {
             Console.WriteLine($"Found Steam save path: {saveFile}");
             Console.Write("Would you like to use this save file? Y/N ");
             if (Console.ReadKey().Key != ConsoleKey.Y) {
                 Console.WriteLine();
-                while (true) {
-                    Console.Write("Enter path (Leave empty to exit): ");
-                    saveFile = Console.ReadLine();
-                    if (string.IsNullOrEmpty(saveFile)) return;
-                    if (!File.Exists(saveFile)) {
-                        Console.WriteLine("File does not exist");
-                        continue;
-                    }
-                    break;
-                }
+                saveFile = AskForSavePath();
+                if (string.IsNullOrEmpty(saveFile)) return;
             }
             Console.WriteLine();
         }
@@ -75,7 +54,7 @@ internal class Program {
                 return;
             }
             var saveDataBytes = saveData.Unpack();
-            if (saveDataBytes == null) return;
+            if (saveDataBytes == null || saveDataBytes.Length == 0) return;
             sysStoryData = JsonSerializer.Deserialize<SysStoryData>(saveDataBytes);
             if (sysStoryData == null || sysStoryData.SaveDatas == null || sysStoryData.SaveDatas.Length == 0) {
                 Console.WriteLine("Not a valid StoryData file");
@@ -129,9 +108,7 @@ internal class Program {
             Console.Write($"Slot {slotIndexInt}: ");
             sysStoryData.SaveDatas[slotIndexInt - 1].PrintInfo();
             if (choiceInt != 3) return;
-            if (!DoChanges(sysStoryData.SaveDatas[slotIndexInt - 1])) {
-                return;
-            }
+            if (!DoChanges(sysStoryData.SaveDatas[slotIndexInt - 1])) return;
             Console.Write("Save changes? Y/N ");
             if (Console.ReadKey().Key != ConsoleKey.Y) {
                 Console.WriteLine();
@@ -153,7 +130,11 @@ internal class Program {
             catch (Exception ex) {
                 Console.WriteLine($"Failed to create backup file: {ex.Message}");
                 Console.Write("Continue with overwriting? Y/N ");
-                if (Console.ReadKey().Key != ConsoleKey.Y) return;
+                if (Console.ReadKey().Key != ConsoleKey.Y) {
+                    Console.WriteLine();
+                    return;
+                }
+                Console.WriteLine();
             }
             try {
                 Console.WriteLine("Saving changes");
@@ -165,6 +146,22 @@ internal class Program {
                 Console.WriteLine($"Failed to save: {ex.Message}");
                 return;
             }
+        }
+    }
+
+    static string AskForSavePath() {
+        while (true) {
+            Console.Write("Enter path (Leave empty to exit): ");
+            string saveFile = Console.ReadLine();
+            if (string.IsNullOrEmpty(saveFile)) return string.Empty;
+            if (string.IsNullOrEmpty(Path.GetExtension(saveFile))) {
+                saveFile = Path.ChangeExtension(saveFile, ".bin");
+            }
+            if (!File.Exists(saveFile)) {
+                Console.WriteLine("File does not exist");
+                continue;
+            }
+            return saveFile;
         }
     }
 
@@ -180,15 +177,16 @@ internal class Program {
             Console.WriteLine("3. Fruit count");
             Console.WriteLine("4. Chaos Emerald count");
             Console.WriteLine("5. Unlock all Shop items");
-            Console.WriteLine("6. Swap first play state of Story Mode (Toggles opening cutscene)");
-            Console.WriteLine("7. Swap first play state of Trip's Story (Toggles opening cutscene)");
+            Console.WriteLine("6. Unlock specific Shop items");
+            Console.WriteLine("7. Swap first play state of Story Mode (Toggles opening cutscene)");
+            Console.WriteLine("8. Swap first play state of Trip's Story (Toggles opening cutscene)");
             Console.WriteLine();
             int choiceInt;
             while (true) {
                 Console.Write("Choice: ");
                 var choice = Console.ReadLine();
                 if (string.IsNullOrEmpty(choice)) return false;
-                if (!int.TryParse(choice, out choiceInt) || choiceInt <= 0 || choiceInt > 7) {
+                if (!int.TryParse(choice, out choiceInt) || choiceInt <= 0 || choiceInt > 8) {
                     Console.WriteLine("Not a valid choice");
                     continue;
                 }
@@ -237,10 +235,36 @@ internal class Program {
                     saveDataStory.UnlockAllShopItems();
                     break;
                 case 6:
+                    Console.WriteLine("1. Metal Sonic + Blue             11. Black");
+                    Console.WriteLine("2. Metal Tails + Yellow           12. Gold");
+                    Console.WriteLine("3. Metal Knuckles + Red           13. Rainbow");
+                    Console.WriteLine("4. Metal Amy + Pink               14. Star");
+                    Console.WriteLine("5. Metal Trip + Orange            15. Heart");
+                    Console.WriteLine("6. Metal NiGHTS                   16. Spring");
+                    Console.WriteLine("7. Battle Mask                    17. Emergency Vehicle Light");
+                    Console.WriteLine("8. Item Box Head                  18. Chimney");
+                    Console.WriteLine("9. Polkadot                       19. Angel Ring");
+                    Console.WriteLine("10. Camouflage                    20. Flicky");
+                    Console.Write("Enter items: (You can separate by comma to enter multiple ex: 1,6,8) ");
+                    consoleText = Console.ReadLine();
+                    if (string.IsNullOrEmpty(consoleText)) return false;
+                    string[] shopItems = consoleText.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string shopItem in shopItems) {
+                        if (!int.TryParse(shopItem, out int shopItemInt)) {
+                            continue;
+                        }
+                        try {
+                            saveDataStory.UnlockShopItem(shopItemInt);
+                        }
+                        catch { }
+                    }
+                    Console.WriteLine("Unlocked");
+                    break;
+                case 7:
                     Console.WriteLine("Toggling Story Mode first play");
                     saveDataStory.IsNormalFirstPlay = !saveDataStory.IsNormalFirstPlay;
                     break;
-                case 7:
+                case 8:
                     Console.WriteLine("Toggling Trip's Story first play");
                     saveDataStory.IsTripFirstPlay = !saveDataStory.IsTripFirstPlay;
                     break;
@@ -252,6 +276,7 @@ internal class Program {
                 Console.WriteLine();
                 break;
             }
+            Console.WriteLine();
         }
         return true;
     }
@@ -267,7 +292,7 @@ internal class Program {
             Console.Write("Enter Template: ");
             var template = Console.ReadLine();
             if (string.IsNullOrEmpty(template)) return false;
-            if (!int.TryParse(template, out templateInt) || templateInt <= 0 || templateInt > 4) {
+            if (!int.TryParse(template, out templateInt) || templateInt <= 0 || templateInt > 3) {
                 Console.WriteLine("Not a valid template choice");
                 continue;
             }
