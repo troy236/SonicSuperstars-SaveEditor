@@ -188,7 +188,7 @@ internal class Program {
                 Console.Write("Choice: ");
                 var choice = Console.ReadLine();
                 if (string.IsNullOrEmpty(choice)) return false;
-                if (!int.TryParse(choice, out choiceInt) || choiceInt <= 0 || choiceInt > 8) {
+                if (!int.TryParse(choice, out choiceInt) || choiceInt <= 0 || choiceInt > 10) {
                     Console.WriteLine("Not a valid choice");
                     continue;
                 }
