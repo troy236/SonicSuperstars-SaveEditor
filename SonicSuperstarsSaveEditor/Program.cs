@@ -16,11 +16,11 @@ internal class Program {
     }
 
     static void Start() {
-        Console.WriteLine("Sonic Superstars Save Editor - Version 1.0.1");
+        Console.WriteLine("Sonic Superstars Save Editor - Version 1.0.2");
         Console.WriteLine("Always backup your save data before modifying it");
         Console.WriteLine();
         try {
-            Console.Title = "Sonic Superstars Save Editor 1.0.1";
+            Console.Title = "Sonic Superstars Save Editor 1.0.2";
         }
         catch { }
         string saveFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -176,10 +176,12 @@ internal class Program {
             Console.WriteLine("2. Medal count");
             Console.WriteLine("3. Fruit count");
             Console.WriteLine("4. Chaos Emerald count");
-            Console.WriteLine("5. Unlock all Shop items");
-            Console.WriteLine("6. Unlock specific Shop items");
-            Console.WriteLine("7. Swap first play state of Story Mode (Toggles opening cutscene)");
-            Console.WriteLine("8. Swap first play state of Trip's Story (Toggles opening cutscene)");
+            Console.WriteLine("5. Set world map spawn location (Story Mode)");
+            Console.WriteLine("6. Set world map spawn location (Trip's Story)");
+            Console.WriteLine("7. Unlock all Shop items");
+            Console.WriteLine("8. Unlock specific Shop items");
+            Console.WriteLine("9. Swap first play state of Story Mode (Toggles opening cutscene)");
+            Console.WriteLine("10. Swap first play state of Trip's Story (Toggles opening cutscene)");
             Console.WriteLine();
             int choiceInt;
             while (true) {
@@ -231,10 +233,58 @@ internal class Program {
                     saveDataStory.AddEmeralds(emeraldCount);
                     break;
                 case 5:
+                    Console.WriteLine("1-1. Bridge Island Act 1           7-1. Press Factory Act 1");
+                    Console.WriteLine("1-2. Bridge Island Act 2           7-2. Press Factory Act 2");
+                    Console.WriteLine("2-1. Speed Jungle Act 1            8-1. Golden Capital Act 1");
+                    Console.WriteLine("2-2. Speed Jungle Act Sonic        8-2. Golden Capital Act Knuckles");
+                    Console.WriteLine("2-3. Speed Jungle Act 2            8-3. Golden Capital Act 2");
+                    Console.WriteLine("3-1. Sky Temple Act 1              9-1. Cyber Station Act 1");
+                    Console.WriteLine("4-1. Pinball Carnival Act 1        10-1. Frozen Base Act 1");
+                    Console.WriteLine("4-2. Pinball Carnival Act 2        10-2. Frozen Base Act Tails");
+                    Console.WriteLine("5-1. Lagoon City Act 1             10-3. Frozen Base Act 2");
+                    Console.WriteLine("5-2. Lagoon City Act Amy           11-1. Egg Fortress Act 1");
+                    Console.WriteLine("5-3. Lagoon City Act 2             11-2. Egg Fortress Act 2");
+                    Console.WriteLine("6-1. Sand Sanctuary Act 1");
+                    Console.Write("Enter stage: ");
+                    consoleText = Console.ReadLine();
+                    if (string.IsNullOrEmpty(consoleText)) return false;
+                    consoleText = consoleText.Replace('-', '0');
+                    if (!int.TryParse(consoleText, out int worldMapStorySpawn) || worldMapStorySpawn < 101 || worldMapStorySpawn > 1102) {
+                        Console.WriteLine("Not a valid spawn location");
+                        break;
+                    }
+                    Console.WriteLine("Setting spawn location");
+                    saveDataStory.LastWorldMapActPoint = worldMapStorySpawn;
+                    break;
+                case 6:
+                    Console.WriteLine("1-1. Bridge Island Act 1           7-1. Press Factory Act 1");
+                    Console.WriteLine("1-2. Bridge Island Act 2           7-2. Press Factory Act 2");
+                    Console.WriteLine("2-1. Speed Jungle Act 1            8-1. Golden Capital Act 1");
+                    Console.WriteLine("2-2. Speed Jungle Act 2            8-2. Golden Capital Act 2");
+                    Console.WriteLine("2-3. Speed Jungle Act 3            8-3. Golden Capital Act 3");
+                    Console.WriteLine("3-1. Sky Temple Act 1              9-1. Cyber Station Act 1");
+                    Console.WriteLine("4-1. Pinball Carnival Act 1        10-1. Frozen Base Act 1");
+                    Console.WriteLine("4-2. Pinball Carnival Act 2        10-2. Frozen Base Act 2");
+                    Console.WriteLine("5-1. Lagoon City Act 1             10-3. Frozen Base Act 3");
+                    Console.WriteLine("5-2. Lagoon City Act 2             11-1. Egg Fortress Act 1");
+                    Console.WriteLine("5-3. Lagoon City Act 3             11-2. Egg Fortress Act 2");
+                    Console.WriteLine("6-1. Sand Sanctuary Act 1");
+                    Console.Write("Enter stage: ");
+                    consoleText = Console.ReadLine();
+                    if (string.IsNullOrEmpty(consoleText)) return false;
+                    consoleText = consoleText.Replace('-', '0');
+                    if (!int.TryParse(consoleText, out int worldMapTripSpawn) || worldMapTripSpawn < 101 || worldMapTripSpawn > 1102) {
+                        Console.WriteLine("Not a valid spawn location");
+                        break;
+                    }
+                    Console.WriteLine("Setting spawn location");
+                    saveDataStory.LastWorldMapTripActPoint = worldMapTripSpawn;
+                    break;
+                case 7:
                     Console.WriteLine("Unlocked all Shop items");
                     saveDataStory.UnlockAllShopItems();
                     break;
-                case 6:
+                case 8:
                     Console.WriteLine("1. Metal Sonic + Blue             11. Black");
                     Console.WriteLine("2. Metal Tails + Yellow           12. Gold");
                     Console.WriteLine("3. Metal Knuckles + Red           13. Rainbow");
@@ -260,11 +310,11 @@ internal class Program {
                     }
                     Console.WriteLine("Unlocked");
                     break;
-                case 7:
+                case 9:
                     Console.WriteLine("Toggling Story Mode first play");
                     saveDataStory.IsNormalFirstPlay = !saveDataStory.IsNormalFirstPlay;
                     break;
-                case 8:
+                case 10:
                     Console.WriteLine("Toggling Trip's Story first play");
                     saveDataStory.IsTripFirstPlay = !saveDataStory.IsTripFirstPlay;
                     break;

@@ -195,6 +195,8 @@ public class SaveDataStory {
         this.BattleRoyalData.UnLockFlags[7].IsLock = false;
         this.ZoneProgress = 11;
         this.LastWorldMapActPoint = 1102;
+        this._miniActKeys.Clear();
+        this._miniActValues.Clear();
         this._miniActKeys.Add(4);
         this._miniActKeys.Add(1);
         this._miniActKeys.Add(7);
