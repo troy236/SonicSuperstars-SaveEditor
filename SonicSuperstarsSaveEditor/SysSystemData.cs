@@ -8,7 +8,7 @@ public enum EGraphicQualityType {
     Custom
 }
 
-public class SysSystemData : ISysData {
+public class SysSystemData {
     public float SeVolume { get; set; }
     public float BgmVolume { get; set; }
     public int LanguageNo { get; set; }

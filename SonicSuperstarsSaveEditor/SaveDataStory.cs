@@ -117,6 +117,237 @@ public class SaveDataStory {
         }
     }
 
+    public void DoChanges() {
+        if (this.IsNonSaved) {
+            Console.WriteLine("This slot has no data. You can only modify this slot with a prebuilt template");
+            DoTemplate();
+            return;
+        }
+        while (true) {
+            Console.WriteLine("You can modify the following data:");
+            Console.WriteLine("1. Use prebuilt template (Set Slot data to completed of any Story Mode)");
+            Console.WriteLine("2. Medal count");
+            Console.WriteLine("3. Fruit count");
+            Console.WriteLine("4. Chaos Emerald count");
+            Console.WriteLine("5. Set world map spawn location (Story Mode)");
+            Console.WriteLine("6. Set world map spawn location (Trip's Story)");
+            Console.WriteLine("7. Unlock all Shop items");
+            Console.WriteLine("8. Unlock specific Shop items");
+            Console.WriteLine("9. Swap first play state of Story Mode (Toggles opening cutscene)");
+            Console.WriteLine("10. Swap first play state of Trip's Story (Toggles opening cutscene)");
+            Console.WriteLine();
+            int choiceInt;
+            while (true) {
+                Console.Write("Choice: ");
+                var choice = Console.ReadLine();
+                if (string.IsNullOrEmpty(choice)) return;
+                if (!int.TryParse(choice, out choiceInt) || choiceInt <= 0 || choiceInt > 10) {
+                    Console.WriteLine("Not a valid choice");
+                    continue;
+                }
+                break;
+            }
+            string consoleText;
+            switch (choiceInt) {
+                case 1:
+                    DoTemplate();
+                    break;
+                case 2:
+                    Console.Write("Enter Medal count: ");
+                    consoleText = Console.ReadLine();
+                    if (string.IsNullOrEmpty(consoleText)) return;
+                    if (!int.TryParse(consoleText, out int medalCount) || medalCount < 0) {
+                        Console.WriteLine("Not a valid Medal count");
+                        break;
+                    }
+                    Console.WriteLine($"Medal count set to: {medalCount}");
+                    this.MedalNum = medalCount;
+                    break;
+                case 3:
+                    Console.Write("Enter Fruit count: ");
+                    consoleText = Console.ReadLine();
+                    if (string.IsNullOrEmpty(consoleText)) return;
+                    if (!int.TryParse(consoleText, out int fruitCount) || fruitCount < 0) {
+                        Console.WriteLine("Not a valid Fruit count");
+                        break;
+                    }
+                    Console.WriteLine($"Fruit count set to: {fruitCount}");
+                    this.FruitNum = fruitCount;
+                    break;
+                case 4:
+                    Console.Write("Enter Chaos Emerald count: ");
+                    consoleText = Console.ReadLine();
+                    if (string.IsNullOrEmpty(consoleText)) return;
+                    if (!int.TryParse(consoleText, out int emeraldCount) || emeraldCount < 0 || emeraldCount > 7) {
+                        Console.WriteLine("Not a valid Chaos Emerald count");
+                        break;
+                    }
+                    Console.WriteLine($"Chaos Emerald count set to: {emeraldCount}");
+                    this.AddEmeralds(emeraldCount);
+                    break;
+                case 5:
+                    Console.WriteLine("1-1. Bridge Island Act 1           7-1. Press Factory Act 1");
+                    Console.WriteLine("1-2. Bridge Island Act 2           7-2. Press Factory Act 2");
+                    Console.WriteLine("2-1. Speed Jungle Act 1            8-1. Golden Capital Act 1");
+                    Console.WriteLine("2-2. Speed Jungle Act Sonic        8-2. Golden Capital Act Knuckles");
+                    Console.WriteLine("2-3. Speed Jungle Act 2            8-3. Golden Capital Act 2");
+                    Console.WriteLine("3-1. Sky Temple Act 1              9-1. Cyber Station Act 1");
+                    Console.WriteLine("4-1. Pinball Carnival Act 1        10-1. Frozen Base Act 1");
+                    Console.WriteLine("4-2. Pinball Carnival Act 2        10-2. Frozen Base Act Tails");
+                    Console.WriteLine("5-1. Lagoon City Act 1             10-3. Frozen Base Act 2");
+                    Console.WriteLine("5-2. Lagoon City Act Amy           11-1. Egg Fortress Act 1");
+                    Console.WriteLine("5-3. Lagoon City Act 2             11-2. Egg Fortress Act 2");
+                    Console.WriteLine("6-1. Sand Sanctuary Act 1");
+                    Console.Write("Enter stage: ");
+                    consoleText = Console.ReadLine();
+                    if (string.IsNullOrEmpty(consoleText)) return;
+                    consoleText = consoleText.Replace('-', '0');
+                    if (!int.TryParse(consoleText, out int worldMapStorySpawn) || worldMapStorySpawn < 101 || worldMapStorySpawn > 1102) {
+                        Console.WriteLine("Not a valid spawn location");
+                        break;
+                    }
+                    Console.WriteLine("Setting spawn location");
+                    this.LastWorldMapActPoint = worldMapStorySpawn;
+                    break;
+                case 6:
+                    Console.WriteLine("1-1. Bridge Island Act 1           7-1. Press Factory Act 1");
+                    Console.WriteLine("1-2. Bridge Island Act 2           7-2. Press Factory Act 2");
+                    Console.WriteLine("2-1. Speed Jungle Act 1            8-1. Golden Capital Act 1");
+                    Console.WriteLine("2-2. Speed Jungle Act 2            8-2. Golden Capital Act 2");
+                    Console.WriteLine("2-3. Speed Jungle Act 3            8-3. Golden Capital Act 3");
+                    Console.WriteLine("3-1. Sky Temple Act 1              9-1. Cyber Station Act 1");
+                    Console.WriteLine("4-1. Pinball Carnival Act 1        10-1. Frozen Base Act 1");
+                    Console.WriteLine("4-2. Pinball Carnival Act 2        10-2. Frozen Base Act 2");
+                    Console.WriteLine("5-1. Lagoon City Act 1             10-3. Frozen Base Act 3");
+                    Console.WriteLine("5-2. Lagoon City Act 2             11-1. Egg Fortress Act 1");
+                    Console.WriteLine("5-3. Lagoon City Act 3             11-2. Egg Fortress Act 2");
+                    Console.WriteLine("6-1. Sand Sanctuary Act 1");
+                    Console.Write("Enter stage: ");
+                    consoleText = Console.ReadLine();
+                    if (string.IsNullOrEmpty(consoleText)) return;
+                    consoleText = consoleText.Replace('-', '0');
+                    if (!int.TryParse(consoleText, out int worldMapTripSpawn) || worldMapTripSpawn < 101 || worldMapTripSpawn > 1102) {
+                        Console.WriteLine("Not a valid spawn location");
+                        break;
+                    }
+                    Console.WriteLine("Setting spawn location");
+                    this.LastWorldMapTripActPoint = worldMapTripSpawn;
+                    break;
+                case 7:
+                    Console.WriteLine("Unlocked all Shop items");
+                    this.UnlockAllShopItems();
+                    break;
+                case 8:
+                    Console.WriteLine("1. Metal Sonic + Blue             11. Black");
+                    Console.WriteLine("2. Metal Tails + Yellow           12. Gold");
+                    Console.WriteLine("3. Metal Knuckles + Red           13. Rainbow");
+                    Console.WriteLine("4. Metal Amy + Pink               14. Star");
+                    Console.WriteLine("5. Metal Trip + Orange            15. Heart");
+                    Console.WriteLine("6. Metal NiGHTS                   16. Spring");
+                    Console.WriteLine("7. Battle Mask                    17. Emergency Vehicle Light");
+                    Console.WriteLine("8. Item Box Head                  18. Chimney");
+                    Console.WriteLine("9. Polkadot                       19. Angel Ring");
+                    Console.WriteLine("10. Camouflage                    20. Flicky");
+                    Console.Write("Enter items: (You can separate by comma to enter multiple ex: 1,6,8) ");
+                    consoleText = Console.ReadLine();
+                    if (string.IsNullOrEmpty(consoleText)) return;
+                    string[] shopItems = consoleText.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string shopItem in shopItems) {
+                        if (!int.TryParse(shopItem, out int shopItemInt)) {
+                            continue;
+                        }
+                        try {
+                            this.UnlockShopItem(shopItemInt);
+                        }
+                        catch { }
+                    }
+                    Console.WriteLine("Unlocked");
+                    break;
+                case 9:
+                    Console.WriteLine("Toggling Story Mode first play");
+                    this.IsNormalFirstPlay = !this.IsNormalFirstPlay;
+                    break;
+                case 10:
+                    Console.WriteLine("Toggling Trip's Story first play");
+                    this.IsTripFirstPlay = !this.IsTripFirstPlay;
+                    break;
+                default:
+                    break;
+            }
+            Console.Write("Would you like to modify other data? Y/N ");
+            if (Console.ReadKey().Key != ConsoleKey.Y) {
+                Console.WriteLine();
+                break;
+            }
+            Console.WriteLine();
+        }
+        return;
+    }
+
+    public void DoTemplate() {
+        Console.WriteLine("You will be able to specify Chaos Emerald count, Character Act completion and more on any template");
+        Console.WriteLine("Templates that complete a later story also complete any prior story");
+        Console.WriteLine("1. Story Mode completed");
+        Console.WriteLine("2. Trip's Story completed");
+        Console.WriteLine("3. Last Story completed");
+        int templateInt;
+        while (true) {
+            Console.Write("Enter Template: ");
+            var template = Console.ReadLine();
+            if (string.IsNullOrEmpty(template)) return;
+            if (!int.TryParse(template, out templateInt) || templateInt <= 0 || templateInt > 3) {
+                Console.WriteLine("Not a valid template choice");
+                continue;
+            }
+            break;
+        }
+        int chaosEmeraldInt = 0;
+        while (true) {
+            Console.Write("Enter Chaos Emerald count: ");
+            var chaosEmerald = Console.ReadLine();
+            if (string.IsNullOrEmpty(chaosEmerald)) break;
+            if (!int.TryParse(chaosEmerald, out chaosEmeraldInt) || chaosEmeraldInt < 0 || chaosEmeraldInt > 7) {
+                Console.WriteLine("Not a valid Chaos Emerald count");
+                continue;
+            }
+            break;
+        }
+        while (true) {
+            Console.Write("Enter Medal count: ");
+            var medalCount = Console.ReadLine();
+            if (string.IsNullOrEmpty(medalCount)) break;
+            if (!int.TryParse(medalCount, out int medalCountInt) || medalCountInt < 0) {
+                Console.WriteLine("Not a valid Medal count");
+                continue;
+            }
+            this.MedalNum = medalCountInt;
+            break;
+        }
+        while (true) {
+            Console.Write("Enter Fruit count: ");
+            var fruitCount = Console.ReadLine();
+            if (string.IsNullOrEmpty(fruitCount)) break;
+            if (!int.TryParse(fruitCount, out int fruitCountInt) || fruitCountInt < 0) {
+                Console.WriteLine("Not a valid Fruit count");
+                continue;
+            }
+            this.FruitNum = fruitCountInt;
+            break;
+        }
+        bool characterActsClear = false;
+        bool shopItemsUnlocked = false;
+        Console.Write("Character Acts completed on Story Mode? Y/N ");
+        if (Console.ReadKey().Key == ConsoleKey.Y) characterActsClear = true;
+        Console.WriteLine();
+        Console.Write("Unlock all shop items? Y/N ");
+        if (Console.ReadKey().Key == ConsoleKey.Y) shopItemsUnlocked = true;
+        Console.WriteLine();
+        this.AddTemplate(templateInt, chaosEmeraldInt, characterActsClear);
+        if (shopItemsUnlocked) this.UnlockAllShopItems();
+        Console.WriteLine("Done");
+        return;
+    }
+
     public void UnlockShopItem(int shopItem) {
         this.BattleRoyalData.UnLockFlags[shopItem].IsLock = false;
     }

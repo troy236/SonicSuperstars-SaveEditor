@@ -1,8 +1,8 @@
 ﻿using System.IO.Compression;
 using System.IO.Hashing;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SonicSuperstarsSaveEditor;
 [Flags]
@@ -17,6 +17,7 @@ internal class SaveData {
     public uint BinaryVersion { get; set; }
     public uint Reserve { get; set; }
     public PackedAttribute Attribute { get; set; }
+    [JsonConverter(typeof(ByteArrayConverter))]
     public byte[] PackedData { get; set; }
 
     public byte[] Unpack() {
@@ -79,12 +80,11 @@ internal class SaveData {
         return Array.Empty<byte>();
     }
 
-    public bool Pack(ISysData iSysData) {
-        if (iSysData == null) {
+    private bool Pack(byte[] packedData) {
+        if (packedData == null || packedData.Length == 0) {
             return false;
         }
         Crc32 crc32 = new();
-        byte[] packedData = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(iSysData));
         crc32.Append(packedData);
         byte[] hash = crc32.GetHashAndReset();
         if ((this.Attribute & PackedAttribute.Compress) == PackedAttribute.Compress) {
@@ -125,5 +125,19 @@ internal class SaveData {
         this.BinaryVersion = BitConverter.ToUInt32(hash);
         this.PackedData = packedData;
         return true;
+    }
+
+    public bool Pack(SysStoryData sysStoryData) {
+        if (sysStoryData == null) {
+            return false;
+        }
+        return this.Pack(JsonSerializer.SerializeToUtf8Bytes(sysStoryData, SysDataJsonContext.Default.StoryData));
+    }
+
+    public bool Pack(SysSystemData sysSystemData) {
+        if (sysSystemData == null) {
+            return false;
+        }
+        return this.Pack(JsonSerializer.SerializeToUtf8Bytes(sysSystemData, SysDataJsonContext.Default.SystemData));
     }
 }

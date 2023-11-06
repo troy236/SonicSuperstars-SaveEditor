@@ -4,13 +4,13 @@ using System.Text.Json;
 namespace SonicSuperstarsSaveEditor;
 public class ByteArrayConverter : JsonConverter<byte[]> {
     public override byte[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-        short[] sByteArray = JsonSerializer.Deserialize<short[]>(ref reader);
-        byte[] value = new byte[sByteArray.Length];
-        for (int i = 0; i < sByteArray.Length; i++) {
-            value[i] = (byte)sByteArray[i];
+        List<byte> bytes = new();
+        reader.Read();
+        while (reader.TokenType != JsonTokenType.EndArray) {
+            bytes.Add(reader.GetByte());
+            reader.Read();
         }
-
-        return value;
+        return bytes.ToArray();
     }
 
     public override void Write(Utf8JsonWriter writer, byte[] value, JsonSerializerOptions options) {

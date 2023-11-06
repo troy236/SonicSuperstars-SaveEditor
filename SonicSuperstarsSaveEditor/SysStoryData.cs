@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace SonicSuperstarsSaveEditor;
-public class SysStoryData : ISysData {
+public class SysStoryData {
     public SaveDataStory[] SaveDatas { get; set; }
     public PlayReportData PlayReportData { get; set; }
     public ulong DLCBuyFlag { get; set; }

@@ -4,6 +4,13 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+	<PublishAot>true</PublishAot>
+	<IlcInstructionSet>fma,aes</IlcInstructionSet>
+	<UseSystemResourceKeys>false</UseSystemResourceKeys>
+	<IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+	<EventSourceSupport>false</EventSourceSupport>
+	<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+	<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
   </PropertyGroup>
 
   <ItemGroup>
