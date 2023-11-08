@@ -12,7 +12,7 @@ public enum PackedAttribute {
     Compress = 2
 }
 
-internal class SaveData {
+public class SaveData {
     public uint FormatVersion { get; set; }
     public uint BinaryVersion { get; set; }
     public uint Reserve { get; set; }
