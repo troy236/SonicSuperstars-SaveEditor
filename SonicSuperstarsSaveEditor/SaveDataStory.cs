@@ -131,17 +131,21 @@ public class SaveDataStory {
             Console.WriteLine("4. Chaos Emerald count");
             Console.WriteLine("5. Set world map spawn location (Story Mode)");
             Console.WriteLine("6. Set world map spawn location (Trip's Story)");
-            Console.WriteLine("7. Unlock all Shop items");
-            Console.WriteLine("8. Unlock specific Shop items");
-            Console.WriteLine("9. Swap first play state of Story Mode (Toggles opening cutscene)");
-            Console.WriteLine("10. Swap first play state of Trip's Story (Toggles opening cutscene)");
+            Console.WriteLine("7. Lock Act on world map (Story Mode)");
+            Console.WriteLine("8. Lock Act on world map (Trip's Story)");
+            Console.WriteLine("9. Unlock Act on world map (Story Mode)");
+            Console.WriteLine("10. Unlock Act on world map (Trip's Story)");
+            Console.WriteLine("11. Unlock all Shop items");
+            Console.WriteLine("12. Unlock specific Shop items");
+            Console.WriteLine("13. Swap first play state of Story Mode (Toggles opening cutscene)");
+            Console.WriteLine("14. Swap first play state of Trip's Story (Toggles opening cutscene)");
             Console.WriteLine();
             int choiceInt;
             while (true) {
                 Console.Write("Choice: ");
                 var choice = Console.ReadLine();
                 if (string.IsNullOrEmpty(choice)) return;
-                if (!int.TryParse(choice, out choiceInt) || choiceInt <= 0 || choiceInt > 10) {
+                if (!int.TryParse(choice, out choiceInt) || choiceInt <= 0 || choiceInt > 14) {
                     Console.WriteLine("Not a valid choice");
                     continue;
                 }
@@ -233,11 +237,203 @@ public class SaveDataStory {
                     Console.WriteLine("Setting spawn location");
                     this.LastWorldMapTripActPoint = worldMapTripSpawn;
                     break;
-                case 7:
+                case 7: {
+                        Console.WriteLine("1-2. Bridge Island Act 2           7-1. Press Factory Act 1");
+                        Console.WriteLine("2-1. Speed Jungle Act 1            7-2. Press Factory Act 2");
+                        Console.WriteLine("2-2. Speed Jungle Act 2            8-1. Golden Capital Act 1");
+                        Console.WriteLine("3-1. Sky Temple Act 1              8-2. Golden Capital Act 2");
+                        Console.WriteLine("4-1. Pinball Carnival Act 1        9-1. Cyber Station Act 1");
+                        Console.WriteLine("4-2. Pinball Carnival Act 2        10-1. Frozen Base Act 1");
+                        Console.WriteLine("5-1. Lagoon City Act 1             10-2. Frozen Base Act 2");
+                        Console.WriteLine("5-2. Lagoon City Act Amy           11-1. Egg Fortress Act 1");
+                        Console.WriteLine("5-3. Lagoon City Act 2             11-2. Egg Fortress Act 2");
+                        Console.WriteLine("6-1. Sand Sanctuary Act 1");
+                        Console.Write("Enter stage: ");
+                        consoleText = Console.ReadLine();
+                        if (string.IsNullOrEmpty(consoleText)) return;
+                        var actToLock = consoleText switch {
+                            "1-2" => EAct.Bridge_Island_Act1,
+                            "2-1" => EAct.Bridge_Island_Act2,
+                            "2-2" => EAct.Speed_Jungle_Act1,
+                            "3-1" => EAct.Speed_Jungle_Act2,
+                            "4-1" => EAct.Sky_Temple_Act1,
+                            "4-2" => EAct.Pinball_Carnival_Act1,
+                            "5-1" => EAct.Pinball_Carnival_Act2,
+                            "5-2" => EAct.Lagoon_City_Act1,
+                            "5-3" => EAct.Lagoon_City_ActAmy,
+                            "6-1" => EAct.Lagoon_City_Act2,
+                            "7-1" => EAct.Sand_Sanctuary_Act1,
+                            "7-2" => EAct.Press_Factory_Act1,
+                            "8-1" => EAct.Press_Factory_Act2,
+                            "8-2" => EAct.Golden_Capital_Act1,
+                            "9-1" => EAct.Golden_Capital_Act2,
+                            "10-1" => EAct.Cyber_Station_Act1,
+                            "10-2" => EAct.Frozen_Base_ActTails | EAct.Frozen_Base_Act1,
+                            "11-1" => EAct.Frozen_Base_Act2,
+                            "11-2" => EAct.Egg_Fortress_Act1,
+                            _ => EAct.None,
+                        };
+                        if (actToLock == EAct.None) {
+                            Console.WriteLine("Not a valid Act");
+                            break;
+                        }
+                        if (this.ClearActProgress == EAct.All) {
+                            this.ClearActProgress = EAct.Bridge_Island_Act1 | EAct.Bridge_Island_Act2 | EAct.Speed_Jungle_Act1 | EAct.Speed_Jungle_Act2
+                                | EAct.Speed_Jungle_ActSonic | EAct.Sky_Temple_Act1 | EAct.Pinball_Carnival_Act1 | EAct.Pinball_Carnival_Act2
+                                | EAct.Lagoon_City_Act1 | EAct.Lagoon_City_ActAmy | EAct.Lagoon_City_Act2 | EAct.Sand_Sanctuary_Act1 | EAct.Press_Factory_Act1
+                                | EAct.Press_Factory_Act2 | EAct.Golden_Capital_Act1 | EAct.Golden_Capital_Act2 | EAct.Golden_Capital_ActKnuckles
+                                | EAct.Cyber_Station_Act1 | EAct.Frozen_Base_Act1 | EAct.Frozen_Base_Act2 | EAct.Frozen_Base_ActTails
+                                | EAct.Egg_Fortress_Act1 | EAct.Egg_Fortress_Act2 | EAct.Last_Story;
+                        }
+                        Console.WriteLine("Locking Act");
+                        this.ClearActProgress &= ~actToLock;
+                    }
+                    break;
+                case 8: {
+                        Console.WriteLine("1-2. Bridge Island Act 2           7-1. Press Factory Act 1");
+                        Console.WriteLine("2-1. Speed Jungle Act 1            7-2. Press Factory Act 2");
+                        Console.WriteLine("2-2. Speed Jungle Act 2            8-1. Golden Capital Act 1");
+                        Console.WriteLine("2-3. Speed Jungle Act 3            8-2. Golden Capital Act 2");
+                        Console.WriteLine("3-1. Sky Temple Act 1              8-3. Golden Capital Act 3");
+                        Console.WriteLine("4-1. Pinball Carnival Act 1        9-1. Cyber Station Act 1");
+                        Console.WriteLine("4-2. Pinball Carnival Act 2        10-1. Frozen Base Act 1");
+                        Console.WriteLine("5-1. Lagoon City Act 1             10-2. Frozen Base Act 2");
+                        Console.WriteLine("5-2. Lagoon City Act 2             10-3. Frozen Base Act 3");
+                        Console.WriteLine("5-3. Lagoon City Act 3             11-1. Egg Fortress Act 1");
+                        Console.WriteLine("6-1. Sand Sanctuary Act 1          11-2. Egg Fortress Act 2");
+                        Console.Write("Enter stage: ");
+                        consoleText = Console.ReadLine();
+                        if (string.IsNullOrEmpty(consoleText)) return;
+                        var actToLock = consoleText switch {
+                            "1-2" => EAct.Bridge_Island_Act1,
+                            "2-1" => EAct.Bridge_Island_Act2,
+                            "2-2" => EAct.Speed_Jungle_Act1,
+                            "2-3" => EAct.Speed_Jungle_ActSonic,
+                            "3-1" => EAct.Speed_Jungle_Act2,
+                            "4-1" => EAct.Sky_Temple_Act1,
+                            "4-2" => EAct.Pinball_Carnival_Act1,
+                            "5-1" => EAct.Pinball_Carnival_Act2,
+                            "5-2" => EAct.Lagoon_City_Act1,
+                            "5-3" => EAct.Lagoon_City_ActAmy,
+                            "6-1" => EAct.Lagoon_City_Act2,
+                            "7-1" => EAct.Sand_Sanctuary_Act1,
+                            "7-2" => EAct.Press_Factory_Act1,
+                            "8-1" => EAct.Press_Factory_Act2,
+                            "8-2" => EAct.Golden_Capital_Act1,
+                            "8-3" => EAct.Golden_Capital_ActKnuckles,
+                            "9-1" => EAct.Golden_Capital_Act2,
+                            "10-1" => EAct.Cyber_Station_Act1,
+                            "10-2" => EAct.Frozen_Base_Act1,
+                            "10-3" => EAct.Frozen_Base_ActTails,
+                            "11-1" => EAct.Frozen_Base_Act2,
+                            "11-2" => EAct.Egg_Fortress_Act1,
+                            _ => EAct.None,
+                        };
+                        if (actToLock == EAct.None) {
+                            Console.WriteLine("Not a valid Act");
+                            break;
+                        }
+                        Console.WriteLine("Locking Act");
+                        this.ClearTripActProgress &= ~actToLock;
+                        break;
+                    }
+                case 9: {
+                        Console.WriteLine("1-2. Bridge Island Act 2           7-1. Press Factory Act 1");
+                        Console.WriteLine("2-1. Speed Jungle Act 1            7-2. Press Factory Act 2");
+                        Console.WriteLine("2-2. Speed Jungle Act 2            8-1. Golden Capital Act 1");
+                        Console.WriteLine("3-1. Sky Temple Act 1              8-2. Golden Capital Act 2");
+                        Console.WriteLine("4-1. Pinball Carnival Act 1        9-1. Cyber Station Act 1");
+                        Console.WriteLine("4-2. Pinball Carnival Act 2        10-1. Frozen Base Act 1");
+                        Console.WriteLine("5-1. Lagoon City Act 1             10-2. Frozen Base Act 2");
+                        Console.WriteLine("5-2. Lagoon City Act Amy           11-1. Egg Fortress Act 1");
+                        Console.WriteLine("5-3. Lagoon City Act 2             11-2. Egg Fortress Act 2");
+                        Console.WriteLine("6-1. Sand Sanctuary Act 1");
+                        Console.Write("Enter stage: ");
+                        consoleText = Console.ReadLine();
+                        if (string.IsNullOrEmpty(consoleText)) return;
+                        var actToLock = consoleText switch {
+                            "1-2" => EAct.Bridge_Island_Act1,
+                            "2-1" => EAct.Bridge_Island_Act2,
+                            "2-2" => EAct.Speed_Jungle_Act1,
+                            "3-1" => EAct.Speed_Jungle_Act2,
+                            "4-1" => EAct.Sky_Temple_Act1,
+                            "4-2" => EAct.Pinball_Carnival_Act1,
+                            "5-1" => EAct.Pinball_Carnival_Act2,
+                            "5-2" => EAct.Lagoon_City_Act1,
+                            "5-3" => EAct.Lagoon_City_ActAmy,
+                            "6-1" => EAct.Lagoon_City_Act2,
+                            "7-1" => EAct.Sand_Sanctuary_Act1,
+                            "7-2" => EAct.Press_Factory_Act1,
+                            "8-1" => EAct.Press_Factory_Act2,
+                            "8-2" => EAct.Golden_Capital_Act1,
+                            "9-1" => EAct.Golden_Capital_Act2,
+                            "10-1" => EAct.Cyber_Station_Act1,
+                            "10-2" => EAct.Frozen_Base_ActTails | EAct.Frozen_Base_Act1,
+                            "11-1" => EAct.Frozen_Base_Act2,
+                            "11-2" => EAct.Egg_Fortress_Act1,
+                            _ => EAct.None,
+                        };
+                        if (actToLock == EAct.None) {
+                            Console.WriteLine("Not a valid Act");
+                            break;
+                        }
+                        Console.WriteLine("Unlocking Act");
+                        this.ClearActProgress |= actToLock;
+                    }
+                    break;
+                case 10: {
+                        Console.WriteLine("1-2. Bridge Island Act 2           7-1. Press Factory Act 1");
+                        Console.WriteLine("2-1. Speed Jungle Act 1            7-2. Press Factory Act 2");
+                        Console.WriteLine("2-2. Speed Jungle Act 2            8-1. Golden Capital Act 1");
+                        Console.WriteLine("2-3. Speed Jungle Act 3            8-2. Golden Capital Act 2");
+                        Console.WriteLine("3-1. Sky Temple Act 1              8-3. Golden Capital Act 3");
+                        Console.WriteLine("4-1. Pinball Carnival Act 1        9-1. Cyber Station Act 1");
+                        Console.WriteLine("4-2. Pinball Carnival Act 2        10-1. Frozen Base Act 1");
+                        Console.WriteLine("5-1. Lagoon City Act 1             10-2. Frozen Base Act 2");
+                        Console.WriteLine("5-2. Lagoon City Act 2             10-3. Frozen Base Act 3");
+                        Console.WriteLine("5-3. Lagoon City Act 3             11-1. Egg Fortress Act 1");
+                        Console.WriteLine("6-1. Sand Sanctuary Act 1          11-2. Egg Fortress Act 2");
+                        Console.Write("Enter stage: ");
+                        consoleText = Console.ReadLine();
+                        if (string.IsNullOrEmpty(consoleText)) return;
+                        var actToLock = consoleText switch {
+                            "1-2" => EAct.Bridge_Island_Act1,
+                            "2-1" => EAct.Bridge_Island_Act2,
+                            "2-2" => EAct.Speed_Jungle_Act1,
+                            "2-3" => EAct.Speed_Jungle_ActSonic,
+                            "3-1" => EAct.Speed_Jungle_Act2,
+                            "4-1" => EAct.Sky_Temple_Act1,
+                            "4-2" => EAct.Pinball_Carnival_Act1,
+                            "5-1" => EAct.Pinball_Carnival_Act2,
+                            "5-2" => EAct.Lagoon_City_Act1,
+                            "5-3" => EAct.Lagoon_City_ActAmy,
+                            "6-1" => EAct.Lagoon_City_Act2,
+                            "7-1" => EAct.Sand_Sanctuary_Act1,
+                            "7-2" => EAct.Press_Factory_Act1,
+                            "8-1" => EAct.Press_Factory_Act2,
+                            "8-2" => EAct.Golden_Capital_Act1,
+                            "8-3" => EAct.Golden_Capital_ActKnuckles,
+                            "9-1" => EAct.Golden_Capital_Act2,
+                            "10-1" => EAct.Cyber_Station_Act1,
+                            "10-2" => EAct.Frozen_Base_Act1,
+                            "10-3" => EAct.Frozen_Base_ActTails,
+                            "11-1" => EAct.Frozen_Base_Act2,
+                            "11-2" => EAct.Egg_Fortress_Act1,
+                            _ => EAct.None,
+                        };
+                        if (actToLock == EAct.None) {
+                            Console.WriteLine("Not a valid Act");
+                            break;
+                        }
+                        Console.WriteLine("Unlocking Act");
+                        this.ClearTripActProgress |= actToLock;
+                        break;
+                    }
+                case 11:
                     Console.WriteLine("Unlocked all Shop items");
                     this.UnlockAllShopItems();
                     break;
-                case 8:
+                case 12:
                     Console.WriteLine("1. Metal Sonic + Blue             11. Black");
                     Console.WriteLine("2. Metal Tails + Yellow           12. Gold");
                     Console.WriteLine("3. Metal Knuckles + Red           13. Rainbow");
@@ -263,11 +459,11 @@ public class SaveDataStory {
                     }
                     Console.WriteLine("Unlocked");
                     break;
-                case 9:
+                case 13:
                     Console.WriteLine("Toggling Story Mode first play");
                     this.IsNormalFirstPlay = !this.IsNormalFirstPlay;
                     break;
-                case 10:
+                case 14:
                     Console.WriteLine("Toggling Trip's Story first play");
                     this.IsTripFirstPlay = !this.IsTripFirstPlay;
                     break;
