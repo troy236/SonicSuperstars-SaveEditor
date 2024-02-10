@@ -16,11 +16,11 @@ internal class Program {
     }
 
     static void Start() {
-        Console.WriteLine("Sonic Superstars Save Editor - Version 1.1.1");
+        Console.WriteLine("Sonic Superstars Save Editor - Version 1.1.2");
         Console.WriteLine("Always backup your save data before modifying it");
         Console.WriteLine();
         try {
-            Console.Title = "Sonic Superstars Save Editor 1.1.1";
+            Console.Title = "Sonic Superstars Save Editor 1.1.2";
         }
         catch { }
         string saveFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
